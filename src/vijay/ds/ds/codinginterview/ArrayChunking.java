@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Convert array to smaller chunks of given size.
+ * @author ashokv
+ *
+ */
 public class ArrayChunking {
 
 	public static void main(String... ars) {
@@ -19,15 +24,15 @@ public class ArrayChunking {
 		List<List<Integer>> listOfchunks = new ArrayList<>();
 
 		int i = 0;
-		List<Integer> chunk = null;
+		List<Integer> existingChunk = null;
 		while (i <= list.size() - 1) {
-			chunk = !listOfchunks.isEmpty() ? listOfchunks.get(listOfchunks.size() - 1) : null;
-			if (null == chunk || chunk.size() == size) {
-				List<Integer> arrayList = new ArrayList<>();
-				arrayList.add(list.get(i));
-				listOfchunks.add(arrayList);
+			existingChunk = !listOfchunks.isEmpty() ? listOfchunks.get(listOfchunks.size() - 1) : null;
+			if (null == existingChunk || existingChunk.size() == size) {
+				List<Integer> newChunk = new ArrayList<>();
+				newChunk.add(list.get(i));
+				listOfchunks.add(newChunk);
 			} else {
-				chunk.add(list.get(i));
+				existingChunk.add(list.get(i));
 			}
 
 			i++;

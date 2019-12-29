@@ -15,11 +15,11 @@ public class MaxCharProgram {
 	public void maxChar(String input) {
 		
 		Map<Character, Integer> holder = new HashMap<>();
-		int length = input.length() - 1;
+		int length = input.length() -1 ;
 		int i = 0;
 		int max = 1;
 		char ch = '~';
-		
+		System.out.println(input + " has length of " + length);
 		while (i <= length) {
 			char charAt = input.charAt(i);
 			Integer counter = holder.get(charAt);
