@@ -1,7 +1,13 @@
 package vijay.ds.ds.codinginterview;
 
 import java.util.Arrays;
-
+/**
+ * 
+ * @author ashokv
+ *	1. Using StringBuffer.reverse()
+ *  2. Loops : charAt or toCharArray ( reverse looping)
+ *  3. Using split() and reduce()
+ */
 public class Palindromes {
 	public static void main(String[] args) {
 		String str1 = "abcde!";
@@ -28,22 +34,6 @@ public class Palindromes {
 		System.out.println(isPalindromes_3(str8));
 	}
 	
-	public static boolean isPalindromes_2 (String str)
-	{
-		boolean status = true;
-
-		int i = 0;
-		int length = str.length() - 1;
-		while (/*i <= length &&*/ i < length - i) {
-			if (str.charAt(i) != str.charAt(length - i)) {
-				status = false;
-				return status;
-			}
-			i++;
-		}
-
-		return status;
-	}
 	public static boolean isPalindromes_1 (String str1, String str2)
 	{
 		boolean status = false;
@@ -64,6 +54,23 @@ public class Palindromes {
 			}
 		}
 		
+		return status;
+	}
+	
+	public static boolean isPalindromes_2 (String str)
+	{
+		boolean status = true;
+
+		int i = 0;
+		int length = str.length() - 1;
+		while (/*i <= length &&*/ i < length - i) {
+			if (str.charAt(i) != str.charAt(length - i)) {
+				status = false;
+				return status;
+			}
+			i++;
+		}
+	
 		return status;
 	}
 	

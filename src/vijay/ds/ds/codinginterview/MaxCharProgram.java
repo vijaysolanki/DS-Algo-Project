@@ -3,6 +3,11 @@ package vijay.ds.ds.codinginterview;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author ashokv
+ *	1. Using hashMap and caching.
+ */
 public class MaxCharProgram {
 
 	public static void main(String[] args) {
@@ -27,6 +32,7 @@ public class MaxCharProgram {
 			if (null != counter) {
 				counter = counter + 1;
 				holder.put(charAt, counter);
+				//cache results of max number and char
 				if (counter > max) {
 					max = counter;
 					ch = charAt;

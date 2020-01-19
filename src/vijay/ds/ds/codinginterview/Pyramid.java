@@ -47,7 +47,7 @@ public class Pyramid {
 				}
 				else
 				{
-					System.out.print(" ");
+					System.out.print("-");
 				}
 			}
 			
