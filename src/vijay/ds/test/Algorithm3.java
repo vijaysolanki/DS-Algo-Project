@@ -1,5 +1,6 @@
 package vijay.ds.test;
 
+
 public class Algorithm3 {
   static int count = 0;
   

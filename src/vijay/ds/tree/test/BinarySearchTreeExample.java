@@ -18,9 +18,9 @@ class BinarySearchTreeExample {
   }
   
   /* Let us create following BST
-  8
-  / \
-  4 12
+     8
+    / \
+   4  12
   / \ / \
   1 7 9 14 */
   void insertNode(int key) {
@@ -50,6 +50,13 @@ class BinarySearchTreeExample {
       preOrderHelper(root.right);
     }
   }
+  
+  /* Let us create following BST
+  8
+ / \
+4  12
+/ \ / \
+1 7 9 14 */
   
   void inorder() {
     inorderHelper(root);
@@ -157,9 +164,12 @@ class BinarySearchTreeExample {
     tree.insertNode(9);
     tree.insertNode(14);
     System.out.println("Data you are looking for :: " + tree.search(tree.root, 1).key);
+    System.out.println("---------InOrder---------");
     tree.inorder();
-    System.out.println("------------------");
-    tree.deleteKey(12);
-    tree.inorder();
+    System.out.println("-------PostOrder-----------");
+//    tree.deleteKey(12);
+    tree.postOrder();
+    System.out.println("-------PreOrder-----------");
+    tree.preOrder();
   }
 }

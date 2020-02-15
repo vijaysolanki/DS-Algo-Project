@@ -2,6 +2,12 @@ package vijay.ds.tree.test;
 
 public class BinarySearchTreeDemo {
   
+  /**
+   *              15
+   *          12      18
+   *        9   13  17  20
+   * @param args
+   */
   public static void main(String[] args) {
     BinarySearchTree tree = new BinarySearchTree();
     tree.insert(15);

@@ -32,8 +32,8 @@ class StackUsingLinkedList {
       headNode = newNode;
     }
     else {
-      SNode temp = headNode;
-      newNode.next = temp;
+//      SNode temp = headNode;
+      newNode.next = headNode;
       headNode = newNode;
     }
   }

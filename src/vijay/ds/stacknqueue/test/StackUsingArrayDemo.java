@@ -32,12 +32,14 @@ class Stack {
   }
   
   public void push(int val) {
+    
     if(top >= MAX - 1) {
       System.out.println("Stack overflow");
     }
     else {
       array[++top] = val;
     }
+    System.out.println("added : "+ val);
   }
   
   public int pop() {
@@ -56,7 +58,7 @@ class Stack {
     }
     int i = top;
     while(i >= 0) {
-      System.out.print(array[i--] + " ");
+      System.out.println(array[i--] );
     }
     System.out.println();
   }

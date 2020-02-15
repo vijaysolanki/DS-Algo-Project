@@ -8,6 +8,7 @@ public class QueueArray {
 		int front = -1;
 		int data[] ;
 		final int MAX = 5;
+		
 		public void inQueue(int value)
 		{
 			if(rear == -1 )
