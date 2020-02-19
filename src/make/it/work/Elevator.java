@@ -6,153 +6,63 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-enum DIRECTION {
-  UP, DOWN;
-}
-
-
-class Person {
-
-  int       inFlr     = -1;
-  int       outFlr    = -1;
-  DIRECTION direction = null;
-  
-  Person(int start, int end, DIRECTION currentDirection) {
-    this.inFlr = start;
-    this.outFlr = end;
-    this.direction = currentDirection;
-  }
-  
-  public int inFloor() {
-    return inFlr;
-  }
-  
-  public int outFloor() {
-    return outFlr;
-  }
-  
-  public DIRECTION getDirection() {
-    return direction;
-  }
-  //dont implement hashcode as we want to relay on object reference then object values.
-}
-
-
-class Lift {
-
-  DIRECTION direction = null;
-  int       capacity  = 0;
-  List<Person> personInLift = new ArrayList<>();
-  //Ground floor
-  int          currentFlr      = 0;
-  int          toFlr        = 0;
-  
-  public Lift() {
-  }
-  
-  public Lift(DIRECTION lftdirection, int liftCapacity) {
-    this.direction = lftdirection;
-    this.capacity = liftCapacity;
-  }
-  
-  public boolean isFull()
-  {
-    return personInLift.size() >= capacity;
-  }
-  
-  public void in(Person person) {
-    personInLift.add(person);
-  }
-  
-  public boolean out(Person person) {
-    return personInLift.remove(person);
-  }
-  
-  public List<Person> listOfPeopleInsideLift() {
-    return personInLift;
-  }
-  
-  public void moveUp() {
-    currentFlr++;
-  }
-  
-  public void moveDown() {
-    currentFlr--;
-  }
-  
-  public int getCurrentFloor()
-  {
-    return currentFlr;
-  }
-  
-  public void setFloorToVisit(int flr) {
-    currentFlr = flr;
-  }
-  
-  public DIRECTION getDirection()
-  {
-    return direction;
-  }
-  
-  
-
-  public boolean isEmpty() {
-    return personInLift.isEmpty();
-  }
-}
-
-
 public class Elevator {
-
   
-  
-  public static int[] goElevatorGo(final int[][] queues, final int CAPACITY) {
-    int bldHeight = 0;//sort the arrays and fine max
-    //    PriorityQueue<Integer> upWardsFlrToVisit = new PriorityQueue<Integer>();
-    PriorityQueue<Integer> downWardsFlrToVisit = new PriorityQueue<Integer>(Comparator.reverseOrder());
-    PriorityQueue<Integer> initialFlrToVisit = new PriorityQueue<Integer>();
+  public int[] goElevatorGo(final int[][] queues, final int CAPACITY) {
     
-    List<Integer> liftTraversalOrder = new ArrayList<Integer>();
-
+    @SuppressWarnings("unused")
+    final int LIFT_MAX_HEIGHT = queues.length;
+    PriorityQueue<Integer> downWardsFlrToVisit = new PriorityQueue<Integer>(Comparator.reverseOrder());
+    PriorityQueue<Integer> upWardsFlrToVisit = new PriorityQueue<Integer>();
+    final int GROUND_FLOOR = 0;
     /***
      * start from ground location to upwards
      */
+    List<Integer> liftTraversalOrder = new ArrayList<Integer>();
+    
     Lift lift = new Lift(DIRECTION.UP, CAPACITY);
     //get the initial floor list to visit
-    int initialFlr = 0;
-    for(int flr = 0; flr < queues.length; flr++) {
-      int[] pplsOnFlr = queues[flr];
+    boolean onlyGoingDown = true;
+    for(int currentflr = 0; currentflr < queues.length; currentflr++) {
+      int[] pplsOnFlr = queues[currentflr];
       // flr has people to enter 
       if(pplsOnFlr.length > 0) {
         // this flr has to be visited
-        initialFlrToVisit.offer(flr);
+        upWardsFlrToVisit.offer(currentflr);
+        //check if every person wants to go up only.
+        onlyGoingDown = onlyGoingDown && isEveryOneWantsToGoDown(currentflr, pplsOnFlr);
       }
     }
     
-
-    while(!lift.isEmpty() || !initialFlrToVisit.isEmpty() || !downWardsFlrToVisit.isEmpty()) {
-      //remove the first entry ( which is first flow to visit )
+    // start from ground floor if not already.
+    if(!upWardsFlrToVisit.contains(GROUND_FLOOR)) {
+      liftTraversalOrder.add(GROUND_FLOOR);
+    }
+    //check if every person wants to go up only.
+    if(onlyGoingDown) {
+      //visit from top floor to ground floor
+      downWardsFlrToVisit.addAll(upWardsFlrToVisit);
+      //set lift direction to down
+      lift.setDirection(DIRECTION.DOWN);
+      //clear initial floor list
+      upWardsFlrToVisit.clear();
+    }
+    
+    while(!lift.isEmpty() || !upWardsFlrToVisit.isEmpty() || !downWardsFlrToVisit.isEmpty()) {
       
-      Integer currentFlr = initialFlrToVisit.remove();
+      //remove the first entry ( which is floor to visit )
+      Integer currentFlr = !upWardsFlrToVisit.isEmpty() ? upWardsFlrToVisit.remove() : downWardsFlrToVisit.remove();
+      liftTraversalOrder.add(currentFlr);
       
       if(null != currentFlr && lift.getDirection() == DIRECTION.UP) {
-
         //check if some one is getting out?
-        List<Person> listOfPeopleInsideLift = lift.listOfPeopleInsideLift();
-        for(Iterator<Person> iterator = listOfPeopleInsideLift.iterator(); iterator.hasNext();) {
-          Person person = iterator.next();
-          if(person.outFloor() == currentFlr) {
-            //remove this person from lift 
-            //            iterator.remove();
-            lift.out(person);
-          }
-        }
+        clearWhoAlreadyReachedToDestination(lift, currentFlr);
         
         //check if some one is getting in?
         int[] pplsOnFlr = queues[currentFlr];
-        // check if we have ppls
+        // check if we have ppl
         if(pplsOnFlr.length > 0) {
-
+          
           for(int i = 0; i < pplsOnFlr.length; i++) {
             int flrPersonWantToVisit = pplsOnFlr[i];
             
@@ -165,58 +75,118 @@ public class Elevator {
               pplsOnFlr[i] = 0;
               
               //add their floor to visit + taking care of duplicate floor 
-              if(!initialFlrToVisit.contains(flrPersonWantToVisit)) {
-                initialFlrToVisit.offer(flrPersonWantToVisit);
+              if(!upWardsFlrToVisit.contains(flrPersonWantToVisit)) {
+                upWardsFlrToVisit.offer(flrPersonWantToVisit);
               }
             }
             // they will be either going to down or we have to return the same floor to pick them as lift was full.
             else {
               //add their floor to visit + taking care of duplicate floor 
+              if(!downWardsFlrToVisit.contains(currentFlr)) {
+                downWardsFlrToVisit.offer(currentFlr);
+              }
+            }
+          }
+          //Assuming we reached to top floor
+          if(upWardsFlrToVisit.isEmpty() && !downWardsFlrToVisit.isEmpty()) {
+            lift.setDirection(DIRECTION.DOWN);
+            //start reverse traversing when no more upward floor are available.
+            currentFlr = downWardsFlrToVisit.remove();
+          }
+        }
+      }
+      
+      if(null != currentFlr && lift.getDirection() == DIRECTION.DOWN) {
+        //check if some one is getting out?
+        clearWhoAlreadyReachedToDestination(lift, currentFlr);
+        
+        //check if some one is getting in?
+        int[] pplsOnFlr = queues[currentFlr];
+        
+        // check if we have ppl
+        if(pplsOnFlr.length > 0) {
+          
+          for(int i = 0; i < pplsOnFlr.length; i++) {
+            int flrPersonWantToVisit = pplsOnFlr[i];
+            
+            //allow only person is going donw from current flr and lift is not full.
+            if(flrPersonWantToVisit < currentFlr && !lift.isFull()) {
+              Person person = new Person(currentFlr, flrPersonWantToVisit, DIRECTION.DOWN);
+              //person boarded the lift.
+              lift.in(person);
+              // now this person is already get into the lift and no more present over the floor.
+              pplsOnFlr[i] = 0;
+              
+              //add their floor to visit + taking care of duplicate floor 
               if(!downWardsFlrToVisit.contains(flrPersonWantToVisit)) {
                 downWardsFlrToVisit.offer(flrPersonWantToVisit);
               }
             }
+            // they will be either going to up or we have to return the same floor to pick them as lift was full.
+            else {
+              //add their floor to visit + taking care of duplicate floor 
+              if(!upWardsFlrToVisit.contains(currentFlr)) {
+                upWardsFlrToVisit.offer(currentFlr);
+              }
+            }
+          }
+          //Assuming we reached to top floor
+          if(downWardsFlrToVisit.isEmpty() /*&& LIFT_MAX_HEIGHT*/) {
+            lift.setDirection(DIRECTION.UP);
           }
         }
       }
-      else if(lift.getDirection() == DIRECTION.DOWN)
-      {
-        
-      }
-      
     }
     
-    /*int groundFlr = 0;
-    for(int flr = groundFlr; flr < queues.length; flr++) {
-      int[] pplsOnFlr = queues[flr];
-      // flr has people to enter 
-      if(pplsOnFlr.length > 0) {
-        // this flr has to be visited
-        initialFlrToVisit.offer(flr);
-        for(int index = 0; index < pplsOnFlr.length; index++)
-        {
-          int flrPersonWantToVisit = pplsOnFlr[index];
-          Person person = new Person(flr, flrPersonWantToVisit, DIRECTION.UP);
-          
-          if(flrPersonWantToVisit < flr) {
-            downWardsFlrToVisit.offer(flrPersonWantToVisit);
-          }
-          else if(flrPersonWantToVisit > flr) {
-            upWardsFlrToVisit.offer(flrPersonWantToVisit);
-          }
-          else
-          {
-    
-          }
-        }
+    //move back to ground floor is not already.
+    if(liftTraversalOrder.get(liftTraversalOrder.size() - 1) != 0/*!onlyGoingDown && liftTraversalOrder.size() > 1*/) {
+      liftTraversalOrder.add(0);
+    }
+    int[] traversalOrder = new int[liftTraversalOrder.size()];
+    for(int i = 0; i < traversalOrder.length; i++) {
+      traversalOrder[i] = liftTraversalOrder.get(i);
+    }
+    return traversalOrder;
+  }
+  
+  /**
+   * Remove people from list who already reached to destination.
+   * 
+   * @param lift
+   * @param currentFlr
+   */
+  protected void clearWhoAlreadyReachedToDestination(Lift lift, Integer currentFlr) {
+    List<Person> listOfPeopleInsideLift = lift.listOfPeopleInsideLift();
+    for(Iterator<Person> iterator = listOfPeopleInsideLift.iterator(); iterator.hasNext();) {
+      Person person = iterator.next();
+      if(person.outFloor() == currentFlr) {
+        //remove this person from lift 
+        iterator.remove();
       }
-    }*/
-    
-    return new int[0];
+    }
+  }
+  
+  /***
+   * verify if every person on current floor want to go down only.
+   * 
+   * @param currentflr
+   * @param pplsOnFlr
+   * @return
+   */
+  protected boolean isEveryOneWantsToGoDown(int currentflr, int[] pplsOnFlr) {
+    boolean status = false;
+    for(int i = 0; i < pplsOnFlr.length; i++) {
+      int flrPersonWantToVisit = pplsOnFlr[i];
+      // just check if every one wants to go down.
+      if(flrPersonWantToVisit < currentflr) {
+        status = true;
+      }
+    }
+    return status;
   }
   
   public static void main(String[] args) {
     System.out.println("Hello! Implement the solution and proof it with the unit tests.");
-    goElevatorGo(null, 0);
+    new Elevator().goElevatorGo(null, 0);
   }
 }
