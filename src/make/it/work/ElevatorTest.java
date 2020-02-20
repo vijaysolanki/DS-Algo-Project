@@ -78,7 +78,7 @@ public class ElevatorTest {
   }
   
   @Test
-  public void testUpAndDown() {
+  public void testUpAndDown_1() {
     final int[][] queues = {new int[0], // G
                             new int[] {2}, // 1
                             new int[] {1, 4}, // 2
@@ -89,6 +89,34 @@ public class ElevatorTest {
     };
     final int[] result = new Elevator().goElevatorGo(queues, 5);
     assertArrayEquals(new int[] {0, 1, 2, 4, 2, 1, 0}, result);
+  }
+  
+  @Test
+  public void testUpAndDown_2() {
+    final int[][] queues = {new int[0], // G
+                            new int[] {4}, // 1
+                            new int[] {1, 3}, // 2
+                            new int[0], // 3
+                            new int[] {3}, // 4
+                            new int[0], // 5
+                            new int[0], // 6
+    };
+    final int[] result = new Elevator().goElevatorGo(queues, 5);
+    assertArrayEquals(new int[] {0, 1, 2, 3, 4, 3, 2, 1, 0}, result);
+  }
+  
+  @Test
+  public void testUpAndDown_3() {
+    final int[][] queues = {new int[0], // G
+                            new int[] {5, 6}, // 1
+                            new int[] {1, 3}, // 2
+                            new int[0], // 3
+                            new int[] {1}, // 4
+                            new int[0], // 5
+                            new int[] {1}, // 6
+    };
+    final int[] result = new Elevator().goElevatorGo(queues, 5);
+    assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5, 6, 4, 2, 1, 0}, result);
   }
   
   @Test
