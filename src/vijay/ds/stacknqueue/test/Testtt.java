@@ -2,7 +2,7 @@ package vijay.ds.stacknqueue.test;
 
 public class Testtt {
   public static void main(String[] args) {
-    QueueUsingArray queue = new QueueUsingArray();
+    QueueUsingArray_1 queue = new QueueUsingArray_1();
     queue.inqueue(1);
     queue.inqueue(3);
     queue.inqueue(6);
@@ -20,7 +20,7 @@ class QueueUsingArray_1 {
   int data[] = new int[4];
   
   public void inqueue(int val) {
-    if(rear > data.length) {
+    if(rear >= data.length - 1) {
       System.out.println("Overflow");
     }
     else {
@@ -35,7 +35,7 @@ class QueueUsingArray_1 {
     }
     else {
       int val = data[0];
-      for(int i = 0; i <= rear; i++) {
+      for(int i = 0; i + 1 <= rear; i++) {
         data[i] = data[i + 1];
       }
       rear--;

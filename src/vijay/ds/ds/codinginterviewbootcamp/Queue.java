@@ -33,7 +33,7 @@ public class Queue<K> {
 	
 	public  void inqueue(K value)
 	{
-		if(rear > data.length -1 )
+    if(rear >= data.length - 1)
 		{
 		 throw new RuntimeException("Queue is full");
 		}
@@ -48,7 +48,7 @@ public class Queue<K> {
 		}
 		
 		K val = (K)data[0];
-		for (int i = 0; i <= rear -1; i++) {
+    for(int i = 0; i + 1 <= rear; i++) {
 			data[i]= data[i +1];
 		}
 		rear = rear -1;
@@ -72,7 +72,7 @@ public class Queue<K> {
 			return null;
 		}
 		
-		return (K)data[rear];
+    return (K) data[0];
 		
 	}
 	
@@ -85,12 +85,8 @@ public class Queue<K> {
 	{
 		Queue<Object> newQ = new Queue<Object>(q1.size() + q2.size());
 		
-		for (int i = 0; i <= newQ.size() -1; i++) {
-			
-			if(null == q1.peek() && null == q2.peek())
-			{
-				return newQ;
-			}
+    while(null != q1.peek() || null != q2.peek()) {
+      
 			if(null != q1.peek()  )
 			{
 				newQ.inqueue(q1.dequeue());
@@ -109,10 +105,10 @@ public class Queue<K> {
 	{
 		Queue<Integer> queue = new Queue<Integer>(5);
 		queue.inqueue(1);
-		queue.inqueue(2);
-		queue.inqueue(3);
-		queue.inqueue(4);
-		queue.inqueue(5);
+    queue.inqueue(2);
+    queue.inqueue(3);
+    queue.inqueue(4);
+    queue.inqueue(5);
 //		queue.inqueue(1);
 		queue.print();
 		
@@ -144,9 +140,9 @@ public class Queue<K> {
 		
 		Queue<Integer> queue2 = new Queue<Integer>(4);
 		queue2.inqueue(1);
-		queue2.inqueue(2);
-		queue2.inqueue(3);
-		queue2.inqueue(4);
+    queue2.inqueue(2);
+    queue2.inqueue(3);
+    queue2.inqueue(4);
 		queue2.print();
 		
 		

@@ -6,10 +6,10 @@ import java.util.List;
 
 /**
  * Convert array to smaller chunks of given size.
+ * 
  * @author ashokv
  *
- *	1. Using Array
- *	2. Using ArrayList
+ *         1. Using Array 2. Using ArrayList 3. Arrays.copyOfRange
  */
 public class ArrayChunking {
 
@@ -17,8 +17,9 @@ public class ArrayChunking {
 		ArrayChunking arrayChunking = new ArrayChunking();
 		int[] arr = { 1, 2, 3, 4, 5 };
 		int size = 2;
-		arrayChunking.printChunks_1(arr, size);
-		arrayChunking.printChunks_2(Arrays.asList(1, 2, 3, 4, 5), size);
+    arrayChunking.printChunks_1(arr, size);
+    arrayChunking.printChunks_2(Arrays.asList(1, 2, 3, 4, 5), size);
+    arrayChunking.printArrayChunk_3(arr, size);
 	}
 
 	public void printChunks_2(List<Integer> list, int size) {
@@ -75,4 +76,20 @@ public class ArrayChunking {
 		return temp;
 	}
 	
+  private static void printArrayChunk_3(int[] arr, int size) {
+    
+    int[][] temp = new int[arr.length / size + arr.length % size][size];
+    int i = 0, j = 0, pos = size;
+    while(i < arr.length) {
+      int[] copyOfRange = Arrays.copyOfRange(arr, i, pos);
+      temp[j] = copyOfRange;
+      j++;
+      i = i + size;
+      pos = i + size;
+    }
+    for(i = 0; i <= temp.length - 1; i++) {
+      System.out.println(Arrays.toString(temp[i]));
+    }
+    
+  }
 }

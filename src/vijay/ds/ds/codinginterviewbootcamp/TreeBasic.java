@@ -104,8 +104,8 @@ class Tree<T,K>{
 }
 
 class TNode<T> {
-  T          data;
-  TNode<T>[] childerns;
+  public T          data;
+  public TNode<T>[] childerns;
   
   TNode(T data) {
     this.data = data;
@@ -120,6 +120,10 @@ class TNode<T> {
     childerns[i] = new TNode<T>(data);
   }
 
+  /** remove ALL the elements matching data.
+   * 
+   * @param data
+   */
   public void remove(T data)
   {
     remove(data, 0);

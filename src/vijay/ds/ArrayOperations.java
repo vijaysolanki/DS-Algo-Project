@@ -8,7 +8,7 @@ public class ArrayOperations {
 			ar.print(data);
 			int[] newArry = ar.add(data, 3, -18);
 			ar.print(newArry);
-			int[] delete = ar.delete(newArry, 4);
+    int[] delete = ar.delete(newArry, 7);
 			ar.print(delete);
 	}
 }
@@ -53,11 +53,14 @@ class MyArray {
 	{    //1,2,6,3,4
 		int[] temp = new int[data.length -1];
 		int index = search(data, val);
+    if(index < 0) {
+      return data;
+    }
 		for (int i = 0; i < index; i++) {
 			temp[i] = data[i];
 		}
 		
-		for (int i = index; i < temp.length; i++) {
+    for(int i = index; i < temp.length; i++) {
 			temp[i] = data[i+1];
 		}
 		

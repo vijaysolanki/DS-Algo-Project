@@ -20,7 +20,7 @@ class QueueUsingArray {
   int data[] = new int[4];
   
   public void inqueue(int val) {
-    if(rear >= data.length - 1) {
+    if(rear > data.length) {
       System.out.println("Queue overflow");
     }
     else {
@@ -35,7 +35,7 @@ class QueueUsingArray {
     }
     else {
       int temp = data[0];
-      for(int i = 0; i < rear; i++) {
+      for(int i = 0; i + 1 <= rear; i++) {
         data[i] = data[i + 1];
       }
       rear--;

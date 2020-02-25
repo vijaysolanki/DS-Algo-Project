@@ -135,7 +135,7 @@ class  MyStack<T>
   
   public void push(T val)
   {
-    if( top > data.length -1)
+    if(top >= data.length - 1)
     {
       throw new RuntimeException("Stack is full");
     }
